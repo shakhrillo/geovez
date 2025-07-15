@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import MapView from '@arcgis/core/views/MapView';
-// import WebMap from '@arcgis/core/WebMap'; // TODO: Re-enable when authentication is implemented
+import WebMap from '@arcgis/core/WebMap';
 import Map from '@arcgis/core/Map';
 import LayerList from '@arcgis/core/widgets/LayerList';
 import Legend from '@arcgis/core/widgets/Legend';
 import Expand from '@arcgis/core/widgets/Expand';
 import { initializeArcGISConfig, widgetConfig } from '../config/arcgis';
+import { useAppSelector } from './redux';
 
 interface UseMapOptions {
   webMapId: string;
@@ -14,8 +15,8 @@ interface UseMapOptions {
 }
 
 export const useMap = ({ webMapId, center, zoom }: UseMapOptions) => {
-  // TODO: webMapId will be used once authentication is implemented
-  console.log('useMap initialized with webMapId:', webMapId);
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  console.log('useMap initialized with webMapId:', webMapId, 'authenticated:', isAuthenticated);
   const viewRef = useRef<MapView | null>(null);
   const mapRef = useRef<HTMLDivElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -52,32 +53,37 @@ export const useMap = ({ webMapId, center, zoom }: UseMapOptions) => {
 
       let map;
       
-      // For now, just use a basic map until authentication is properly set up
-      // Once authentication is working, we can try to load web maps
-      console.log('Creating basic map with basemap...');
-      map = new Map({
-        basemap: 'streets-navigation-vector'
-      });
-      
-      // TODO: Once authentication is implemented, try to load WebMap
-      // try {
-      //   // Try to create a WebMap first
-      //   const webmap = new WebMap({
-      //     portalItem: {
-      //       id: webMapId
-      //     }
-      //   });
-      //   await webmap.load();
-      //   map = webmap;
-      //   console.log('Successfully loaded WebMap:', webMapId);
-      // } catch (webMapError) {
-      //   console.warn('Failed to load WebMap, falling back to basic map:', webMapError);
-      //   map = new Map({
-      //     basemap: 'streets-navigation-vector'
-      //   });
-      // }
+      // Try to create a WebMap if authenticated, otherwise use basic map
+      if (isAuthenticated) {
+        try {
+          console.log('User is authenticated, attempting to load WebMap with ID:', webMapId);
+          const webmap = new WebMap({
+            portalItem: {
+              id: webMapId
+            }
+          });
+          
+          // Wait for the WebMap to load
+          await webmap.load();
+          map = webmap;
+          console.log('Successfully loaded WebMap:', webMapId);
+        } catch (webMapError) {
+          console.warn('Failed to load WebMap, falling back to basic map:', webMapError);
+          console.log('Creating basic map with basemap...');
+          map = new Map({
+            basemap: 'streets-navigation-vector'
+          });
+        }
+      } else {
+        console.log('User not authenticated, creating basic map. Please sign in to access WebMap features.');
+        console.log('When you sign in, you will have access to:', webMapId);
+        map = new Map({
+          basemap: 'streets-navigation-vector'
+        });
+      }
 
       // Create the MapView
+      console.log('Creating MapView with container:', !!mapRef.current);
       const view = new MapView({
         container: mapRef.current,
         map: map,
@@ -87,11 +93,23 @@ export const useMap = ({ webMapId, center, zoom }: UseMapOptions) => {
 
       // Store view reference
       viewRef.current = view;
-      console.log('MapView created');
+      console.log('MapView created successfully');
 
-      // Wait for view to be ready
-      await view.when();
-      console.log('MapView ready');
+      // Wait for view to be ready with timeout
+      console.log('Waiting for MapView to be ready...');
+      const viewReadyTimeout = setTimeout(() => {
+        console.warn('MapView taking longer than expected to load');
+      }, 10000);
+
+      try {
+        await view.when();
+        clearTimeout(viewReadyTimeout);
+        console.log('MapView ready successfully');
+      } catch (viewError) {
+        clearTimeout(viewReadyTimeout);
+        console.error('MapView failed to initialize:', viewError);
+        throw viewError;
+      }
 
       // Add widgets
       const layerList = new LayerList({
@@ -144,6 +162,16 @@ export const useMap = ({ webMapId, center, zoom }: UseMapOptions) => {
       }
     };
   }, []);
+
+  // Re-initialize map when authentication state changes
+  useEffect(() => {
+    if (mapInitialized) {
+      console.log('Authentication state changed, reinitializing map...');
+      setMapInitialized(false);
+      setError(null);
+      initializeMap();
+    }
+  }, [isAuthenticated]);
 
   return {
     view: viewRef.current,

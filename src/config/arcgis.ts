@@ -25,7 +25,7 @@ export const defaultMapConfig = {
   center: [144.9631, -37.8136] as [number, number],
   zoom: 10,
   // Using a well-known public Esri sample web map that doesn't require authentication
-  defaultWebMapId: '9c9c1d4b487b4b8c8b8b8b8b8b8b8b8b'
+  defaultWebMapId: '6086cafaea434dfa8e8b9c96c4659395' // Esri public sample map
 };
 
 // Widget configurations

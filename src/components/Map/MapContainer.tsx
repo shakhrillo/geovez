@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { defaultMapConfig } from '../../config/arcgis';
 import { useMap } from '../../hooks/useMap';
+import { useAppSelector } from '../../hooks/redux';
 
 interface MapContainerProps {
   webMapId?: string;
@@ -14,6 +15,7 @@ const MapContainer = ({
   zoom = defaultMapConfig.zoom 
 }: MapContainerProps = {}) => {
   
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
   const { isLoading, error, retry, mapRef, initializeMap } = useMap({
     webMapId,
     center,
@@ -83,7 +85,14 @@ const MapContainer = ({
           fontSize: '0.9rem',
           color: 'var(--geovez-text-secondary, #6C757D)',
           opacity: 0.8
-        }}><small>Loading basic map (authentication not yet configured)</small></p>
+        }}>
+          <small>
+            {isAuthenticated 
+              ? 'Loading WebMap with advanced features...' 
+              : 'Loading basic map. Sign in to access WebMap features and advanced layers.'
+            }
+          </small>
+        </p>
       </div>
     );
   }

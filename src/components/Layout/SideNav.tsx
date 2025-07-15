@@ -4,18 +4,13 @@ import { openDrawer } from '../../store/slices/uiSlice';
 import { startHelpTour } from '../../store/slices/uiSlice';
 import type { RootState } from '../../store';
 import { 
-  CalciteNavigation,
-  CalciteNavigationUser,
   CalciteMenu,
-  CalciteMenuItem,
-  CalciteIcon
+  CalciteMenuItem
 } from '@esri/calcite-components-react';
 
 const SideNav: React.FC = () => {
   const dispatch = useAppDispatch();
-  const auth = useAppSelector((state: RootState) => state.auth);
   const ui = useAppSelector((state: RootState) => state.ui);
-  const { user, isAuthenticated } = auth || {};
   const { drawerContent } = ui || {};
 
   const navigationItems = [
@@ -52,7 +47,6 @@ const SideNav: React.FC = () => {
             key={item.id}
             text={item.text}
             iconStart={item.icon}
-            textEnabled
             active={drawerContent === item.id}
             onClick={() => handleNavigation(item.id)}
             data-tour={item.id}
@@ -62,7 +56,6 @@ const SideNav: React.FC = () => {
         <CalciteMenuItem
           text="Help"
           iconStart="information"
-          textEnabled
           onClick={() => handleNavigation('help')}
         />
       </CalciteMenu>

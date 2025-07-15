@@ -234,7 +234,7 @@ const ToolsPanel: React.FC = () => {
             {toolsByCategory.map(category => (
               <CalciteAccordionItem
                 key={category.id}
-                itemTitle={`${category.label} (${category.count})`}
+                heading={`${category.label} (${category.count})`}
                 expanded={category.id === 'measurement'}
               >
                 <CalciteIcon icon={category.icon} slot="actions-start" />

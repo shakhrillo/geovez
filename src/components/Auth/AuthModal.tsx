@@ -7,6 +7,8 @@ import {
   CalciteLoader,
   CalciteIcon
 } from '@esri/calcite-components-react';
+import esriId from "@arcgis/core/identity/IdentityManager";
+import OAuthInfo from "@arcgis/core/identity/OAuthInfo";
 
 interface AuthModalProps {
   onClose: () => void;
@@ -18,37 +20,19 @@ const AuthModal = ({ onClose }: AuthModalProps) => {
   const { error } = useAppSelector((state) => state.auth);
 
   const handleSignIn = async () => {
-    if (!window.esri) {
-      dispatch(setError('ArcGIS API not loaded. Please refresh the page and try again.'));
-      return;
-    }
-
     setIsSigningIn(true);
     dispatch(setLoading(true));
     dispatch(setError(null));
 
-    try {
-      // Initialize OAuth if not already done
-      if (!window.esri.identity.IdentityManager.findOAuthInfo('https://www.arcgis.com/sharing/rest')) {
-        const oAuthInfo = new window.esri.identity.OAuthInfo({
-          appId: 'geovez-web-app', // This should be replaced with your actual ArcGIS app ID
-          popup: false,
-          portalUrl: 'https://www.arcgis.com/sharing/rest',
-          flowType: 'auto', // Use 'auto' for better user experience
-          popupCallbackUrl: `https://localhost:3000/oauth-callback.html`
-        });
-        
-        window.esri.identity.IdentityManager.registerOAuthInfos([oAuthInfo]);
-      }
+    const portalUrl = 'https://www.arcgis.com';
+    const APP_ID = 'seHOOIqBj2A5kubt'; // This should be replaced with your actual ArcGIS app ID
 
-      // Get credential
-      const credential = await window.esri.identity.IdentityManager.getCredential(
-        'https://www.arcgis.com/sharing/rest',
-        {
-          oAuthPopupConfirmation: false,
-          retry: true
-        }
-      );
+    try {
+      await toggleLogin(portalUrl, APP_ID);
+      
+      // After successful login, get the credential to extract user info
+      const sharingURL = `${portalUrl}/sharing`;
+      const credential = await esriId.getCredential(sharingURL);
       
       if (!credential || !credential.token) {
         throw new Error('Failed to obtain authentication credential');
@@ -105,6 +89,41 @@ const AuthModal = ({ onClose }: AuthModalProps) => {
     } finally {
       setIsSigningIn(false);
       dispatch(setLoading(false));
+    }
+  };
+
+  // Request login or logout user
+  const toggleLogin = async (portalUrl: string, APP_ID: string) => {
+    const oAuthInfo = esriId.findOAuthInfo(portalUrl);
+    const sharingURL = `${portalUrl}/sharing`;
+    const logOutURL = `${portalUrl}/sharing/rest/oauth2/signout`;
+
+    try {
+      await esriId.checkSignInStatus(sharingURL);
+      esriId.destroyCredentials();
+      oAuthInfo && oAuthInfo.destroy();
+
+      const href = window.location.href;
+      const redirect_uri = href.split("?")[0];
+      const client_id = "arcgisonline";
+      const url = `${logOutURL}?client_id=${client_id}&redirect_uri=${redirect_uri}`;
+      await fetch(url);
+
+      // Note: In a real app, you'd call logOutOfApp() here
+      // logOutOfApp();
+    } catch (error) {
+      if (!oAuthInfo) {
+        const authInfo = new OAuthInfo({
+          appId: APP_ID,
+          portalUrl,
+          popup: false,
+        });
+
+        esriId.registerOAuthInfos([authInfo]);
+      }
+
+      // Login user
+      return esriId.getCredential(sharingURL);
     }
   };
 
