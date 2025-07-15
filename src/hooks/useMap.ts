@@ -22,20 +22,29 @@ export const useMap = ({ webMapId, center, zoom }: UseMapOptions) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [mapInitialized, setMapInitialized] = useState(false);
+  const [waitingForAuth, setWaitingForAuth] = useState(true);
 
   const initializeMap = async () => {
-    if (!mapRef.current || mapInitialized) {
-      console.log('Map initialization skipped:', { 
-        hasContainer: !!mapRef.current, 
-        mapInitialized 
-      });
+    // if (!mapRef.current || mapInitialized) {
+    //   console.log('Map initialization skipped:', { 
+    //     hasContainer: !!mapRef.current, 
+    //     mapInitialized 
+    //   });
+    //   return;
+    // }
+
+    // Wait for authentication before initializing map
+    if (!isAuthenticated) {
+      console.log('Waiting for user authentication before initializing map...');
+      setWaitingForAuth(true);
       return;
     }
 
     try {
-      console.log('Starting map initialization...');
+      console.log('Starting map initialization with authenticated user...');
       setIsLoading(true);
       setError(null);
+      setWaitingForAuth(false);
 
       // Initialize ArcGIS configuration
       initializeArcGISConfig();
@@ -53,30 +62,22 @@ export const useMap = ({ webMapId, center, zoom }: UseMapOptions) => {
 
       let map;
       
-      // Try to create a WebMap if authenticated, otherwise use basic map
-      if (isAuthenticated) {
-        try {
-          console.log('User is authenticated, attempting to load WebMap with ID:', webMapId);
-          const webmap = new WebMap({
-            portalItem: {
-              id: webMapId
-            }
-          });
-          
-          // Wait for the WebMap to load
-          await webmap.load();
-          map = webmap;
-          console.log('Successfully loaded WebMap:', webMapId);
-        } catch (webMapError) {
-          console.warn('Failed to load WebMap, falling back to basic map:', webMapError);
-          console.log('Creating basic map with basemap...');
-          map = new Map({
-            basemap: 'streets-navigation-vector'
-          });
-        }
-      } else {
-        console.log('User not authenticated, creating basic map. Please sign in to access WebMap features.');
-        console.log('When you sign in, you will have access to:', webMapId);
+      // Since we're waiting for authentication, we can now confidently load the WebMap
+      try {
+        console.log('User is authenticated, loading WebMap with ID:', webMapId);
+        const webmap = new WebMap({
+          portalItem: {
+            id: webMapId,
+          },
+        });
+        
+        // Wait for the WebMap to load
+        await webmap.load();
+        map = webmap;
+        console.log('Successfully loaded WebMap:', webMapId);
+      } catch (webMapError) {
+        console.warn('Failed to load WebMap, falling back to basic map:', webMapError);
+        console.log('Creating basic map with basemap...');
         map = new Map({
           basemap: 'streets-navigation-vector'
         });
@@ -163,15 +164,13 @@ export const useMap = ({ webMapId, center, zoom }: UseMapOptions) => {
     };
   }, []);
 
-  // Re-initialize map when authentication state changes
+  // Initialize map when authentication is successful
   useEffect(() => {
-    if (mapInitialized) {
-      console.log('Authentication state changed, reinitializing map...');
-      setMapInitialized(false);
-      setError(null);
+    if (isAuthenticated && !mapInitialized) {
+      console.log('User authenticated, initializing map...');
       initializeMap();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, mapInitialized]);
 
   return {
     view: viewRef.current,
@@ -179,10 +178,13 @@ export const useMap = ({ webMapId, center, zoom }: UseMapOptions) => {
     error,
     mapRef,
     initializeMap,
+    waitingForAuth,
     retry: () => {
       setError(null);
       setMapInitialized(false);
-      initializeMap();
+      if (isAuthenticated) {
+        initializeMap();
+      }
     }
   };
 };

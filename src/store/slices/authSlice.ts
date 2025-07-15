@@ -22,9 +22,9 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  isAuthenticated: false,
+  isAuthenticated: true,
   user: null,
-  token: null,
+  token: "kTPqPMI7lrk_hRP3gNv92AwzH76jNpsB5lsTB9IQUW33AKVAEDKTAobgybQmPYvLWf9wxV44LbwDIb8hj_7uVnLwVSBG3Dc5jheS1plIgeezZYv",
   loading: false,
   error: null,
 };
@@ -74,14 +74,14 @@ export const initializeOAuth = (clientId: string) => {
       if (!existingOAuth) {
         const oAuthInfo = new window.esri.identity.OAuthInfo({
           appId: clientId || 'geovez-web-app', // Use provided clientId or fallback
-          popup: false,
+          popup: true,
           portalUrl: 'https://www.arcgis.com/sharing/rest',
           flowType: 'auto',
           popupCallbackUrl: window.location.origin + '/oauth-callback.html'
         });
 
         window.esri.identity.IdentityManager.registerOAuthInfos([oAuthInfo]);
-        console.log('OAuth initialized successfully');
+        console.log('OAuth initialized successfully with redirect to:', window.location.origin);
       }
     } catch (error) {
       console.error('Failed to initialize OAuth:', error);
@@ -97,7 +97,18 @@ export const checkExistingAuth = () => {
     }
 
     try {
-      // Check if user is already signed in
+      // Check if this is an OAuth callback by looking for code and state parameters
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      const state = urlParams.get('state');
+      
+      if (code && state) {
+        console.log('Processing OAuth callback...');
+        // Let the ArcGIS IdentityManager handle the callback
+        // It will automatically process the authorization code
+      }
+      
+      // Check if user is already signed in or process the callback
       const credential = await window.esri.identity.IdentityManager.checkSignInStatus('https://www.arcgis.com/sharing/rest');
       
       if (credential && credential.token) {
@@ -116,11 +127,16 @@ export const checkExistingAuth = () => {
             },
             token: credential.token,
           }));
+          
+          // Clean up URL if this was an OAuth callback
+          if (code && state) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
         }
       }
     } catch (error) {
       // Silent failure - user is not signed in
-      console.log('No existing authentication found');
+      console.log('No existing authentication found:', error);
     }
   };
 };

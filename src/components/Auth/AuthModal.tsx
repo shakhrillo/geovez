@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { setAuthentication, setLoading, setError } from '../../store/slices/authSlice';
 import { 
@@ -17,22 +17,25 @@ interface AuthModalProps {
 const AuthModal = ({ onClose }: AuthModalProps) => {
   const dispatch = useAppDispatch();
   const [isSigningIn, setIsSigningIn] = useState(false);
-  const { error } = useAppSelector((state) => state.auth);
+  const { error, isAuthenticated } = useAppSelector((state) => state.auth);
+
+  // Auto-close modal when authentication is successful
+  useEffect(() => {
+    if (isAuthenticated) {
+      onClose();
+    }
+  }, [isAuthenticated, onClose]);
 
   const handleSignIn = async () => {
     setIsSigningIn(true);
     dispatch(setLoading(true));
     dispatch(setError(null));
 
-    const portalUrl = 'https://www.arcgis.com';
+    const portalUrl = 'https://basecg.maps.arcgis.com';
     const APP_ID = 'seHOOIqBj2A5kubt'; // This should be replaced with your actual ArcGIS app ID
 
     try {
-      await toggleLogin(portalUrl, APP_ID);
-      
-      // After successful login, get the credential to extract user info
-      const sharingURL = `${portalUrl}/sharing`;
-      const credential = await esriId.getCredential(sharingURL);
+      const credential = await toggleLogin(portalUrl, APP_ID);
       
       if (!credential || !credential.token) {
         throw new Error('Failed to obtain authentication credential');
@@ -68,7 +71,7 @@ const AuthModal = ({ onClose }: AuthModalProps) => {
         token: credential.token,
       }));
 
-      onClose();
+      // Note: Modal will auto-close via useEffect when isAuthenticated becomes true
     } catch (error) {
       console.error('Sign in failed:', error);
       let errorMessage = 'Failed to sign in. Please try again.';
@@ -116,13 +119,13 @@ const AuthModal = ({ onClose }: AuthModalProps) => {
         const authInfo = new OAuthInfo({
           appId: APP_ID,
           portalUrl,
-          popup: false,
+          popup: true
         });
 
         esriId.registerOAuthInfos([authInfo]);
       }
 
-      // Login user
+      // Login user - this will redirect to ArcGIS for authentication
       return esriId.getCredential(sharingURL);
     }
   };
@@ -140,7 +143,7 @@ const AuthModal = ({ onClose }: AuthModalProps) => {
         <div className="auth-modal-header">
           <h3 className="auth-modal-title">Welcome to GeoVez</h3>
           <p className="auth-modal-subtitle">
-            Sign in to your ArcGIS Online account to access maps, layers, and personalized content.
+            Authentication is required to access the mapping platform. Sign in to your ArcGIS Online account to view maps, layers, and personalized content.
           </p>
         </div>
         

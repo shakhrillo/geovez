@@ -16,7 +16,7 @@ const MapContainer = ({
 }: MapContainerProps = {}) => {
   
   const { isAuthenticated } = useAppSelector((state) => state.auth);
-  const { isLoading, error, retry, mapRef, initializeMap } = useMap({
+  const { isLoading, error, retry, mapRef, initializeMap, waitingForAuth } = useMap({
     webMapId,
     center,
     zoom
@@ -41,6 +41,58 @@ const MapContainer = ({
       clearTimeout(timeoutTimer);
     };
   }, [initializeMap]);
+
+  // Render waiting for authentication state
+  if (waitingForAuth) {
+    return (
+      <div 
+        className="map-container"
+        style={{ 
+          width: '100%', 
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'var(--geovez-background, #F5F7FA)',
+          color: 'var(--geovez-text-secondary, #6C757D)',
+          textAlign: 'center',
+          padding: '3rem',
+          fontFamily: "'Avenir Next', system-ui, Avenir, Helvetica, Arial, sans-serif"
+        }}
+        data-tour="map-container"
+      >
+        <div style={{
+          fontSize: '4rem',
+          marginBottom: '1.5rem',
+          background: 'linear-gradient(135deg, var(--geovez-primary, #0079C1), var(--geovez-primary-dark, #005CE6))',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text'
+        }}>🔐</div>
+        <h3 style={{
+          color: 'var(--geovez-text, #2B2D42)',
+          fontSize: '1.5rem',
+          fontWeight: 600,
+          marginBottom: '1rem'
+        }}>Authentication Required</h3>
+        <p style={{
+          fontSize: '1rem',
+          marginBottom: '0.5rem',
+          color: 'var(--geovez-text-secondary, #6C757D)'
+        }}>Please sign in to access the map and WebMap features.</p>
+        <p style={{
+          fontSize: '0.9rem',
+          color: 'var(--geovez-text-secondary, #6C757D)',
+          opacity: 0.8
+        }}>
+          <small>
+            The sign-in modal should appear automatically. If it doesn't, please click the sign-in button in the header.
+          </small>
+        </p>
+      </div>
+    );
+  }
 
   // Render loading state
   if (isLoading) {
