@@ -1,0 +1,651 @@
+/* App.css - Modern GeoVez Design */
+.app-shell {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  --geovez-primary: #0079C1;
+  --geovez-primary-dark: #005CE6;
+  --geovez-accent: #00B6F0;
+  --geovez-surface: #FFFFFF;
+  --geovez-background: #F5F7FA;
+  --geovez-text: #2B2D42;
+  --geovez-text-secondary: #6C757D;
+  --geovez-border: #E9ECEF;
+  --geovez-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --geovez-shadow-elevated: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.main-content {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: var(--geovez-background);
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  box-shadow: inset 0 0 0 1px var(--geovez-border);
+}
+
+/* Header Styles - Modern Design */
+.modern-header {
+  background: var(--geovez-surface);
+  border-bottom: 1px solid var(--geovez-border);
+  box-shadow: var(--geovez-shadow);
+  position: relative;
+  z-index: 1000;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 1rem;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, var(--geovez-primary), var(--geovez-primary-dark));
+  border-radius: 24px;
+  color: white;
+  font-weight: 500;
+  box-shadow: var(--geovez-shadow);
+  transition: all 0.3s ease;
+}
+
+.user-info:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--geovez-shadow-elevated);
+}
+
+.username {
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.modern-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+  color: var(--geovez-text);
+  text-decoration: none;
+}
+
+.modern-logo img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+.sign-in-button {
+  background: linear-gradient(135deg, var(--geovez-primary), var(--geovez-primary-dark)) !important;
+  border: none !important;
+  border-radius: 24px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  box-shadow: var(--geovez-shadow) !important;
+  transition: all 0.3s ease !important;
+}
+
+.sign-in-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--geovez-shadow-elevated) !important;
+}
+
+/* Side Navigation - Modern Material Design */
+.modern-sidenav {
+  /* background: var(--geovez-surface);
+  border-right: 1px solid var(--geovez-border);
+  box-shadow: var(--geovez-shadow);
+  height: 100%;
+  width: 500px;
+  transition: all 0.3s ease; */
+  padding: 0;
+  background: #fff;
+}
+
+.modern-sidenav-menu {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  color: var(--geovez-text);
+  text-decoration: none;
+  border-radius: 0 24px 24px 0;
+  margin: 0.25rem 0 0.25rem 1rem;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  background: linear-gradient(135deg, rgba(0, 121, 193, 0.1), rgba(0, 92, 230, 0.1));
+  color: var(--geovez-primary);
+  transform: translateX(4px);
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, var(--geovez-primary), var(--geovez-primary-dark));
+  color: white;
+  box-shadow: var(--geovez-shadow);
+}
+
+.nav-item calcite-icon {
+  transition: all 0.3s ease;
+}
+
+.nav-item:hover calcite-icon {
+  transform: scale(1.1);
+}
+
+.nav-user-section {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--geovez-border);
+  background: linear-gradient(135deg, rgba(0, 121, 193, 0.05), rgba(0, 92, 230, 0.05));
+}
+
+.nav-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nav-user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--geovez-primary), var(--geovez-primary-dark));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+/* Footer Styles - Modern Design */
+.modern-footer {
+  background: var(--geovez-surface);
+  border-top: 1px solid var(--geovez-border);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+  padding: 2rem 1rem;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer-links {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.footer-link {
+  color: var(--geovez-text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-link:hover {
+  color: var(--geovez-primary);
+  background: rgba(0, 121, 193, 0.1);
+  transform: translateY(-2px);
+}
+
+.footer-social {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.social-link {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--geovez-background);
+  border: 2px solid var(--geovez-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--geovez-text-secondary);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  background: var(--geovez-primary);
+  color: white;
+  border-color: var(--geovez-primary);
+  transform: translateY(-3px);
+  box-shadow: var(--geovez-shadow-elevated);
+}
+
+.footer-copyright {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--geovez-border);
+  color: var(--geovez-text-secondary);
+  font-size: 0.9rem;
+}
+
+/* Panel Styles - Modern Drawer Design */
+.modern-drawer {
+  background: var(--geovez-surface);
+  border-left: 1px solid var(--geovez-border);
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+  height: 100%;
+}
+
+.panel-content {
+  padding: 2rem;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--geovez-border);
+}
+
+.panel-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--geovez-text);
+  margin: 0;
+}
+
+.drawer-content {
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Loading Spinner - Enhanced */
+.loading-spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  gap: 2rem;
+  background: var(--geovez-background);
+}
+
+.loading-content {
+  text-align: center;
+}
+
+.loading-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--geovez-text);
+  margin-bottom: 0.5rem;
+}
+
+.loading-subtitle {
+  color: var(--geovez-text-secondary);
+  font-size: 1rem;
+}
+
+/* Auth Modal - Modern Design */
+.modern-auth-modal .auth-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2.5rem;
+  border-radius: 16px;
+  background: var(--geovez-surface);
+  box-shadow: var(--geovez-shadow-elevated);
+}
+
+.auth-modal-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.auth-modal-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--geovez-text);
+  margin-bottom: 0.5rem;
+}
+
+.auth-modal-subtitle {
+  color: var(--geovez-text-secondary);
+  font-size: 1rem;
+}
+
+.signing-in {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(0, 121, 193, 0.1), rgba(0, 92, 230, 0.1));
+  border-radius: 12px;
+  color: var(--geovez-primary);
+  font-weight: 500;
+}
+
+/* Enhanced Component Styling */
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--geovez-text);
+  margin-bottom: 0.75rem;
+}
+
+.card-content {
+  color: var(--geovez-text-secondary);
+  line-height: 1.6;
+}
+
+/* Map Selection Cards */
+.modern-card.selected {
+  background: linear-gradient(135deg, rgba(0, 121, 193, 0.05), rgba(0, 92, 230, 0.05));
+  border-color: var(--geovez-primary) !important;
+  box-shadow: 0 4px 20px rgba(0, 121, 193, 0.15);
+}
+
+/* Enhanced Navigation */
+calcite-navigation {
+  --calcite-color-foreground-1: var(--geovez-surface);
+  --calcite-color-text-1: var(--geovez-text);
+}
+
+/* Panel Headers */
+calcite-panel {
+  --calcite-color-foreground-1: var(--geovez-surface);
+  --calcite-color-border-3: var(--geovez-border);
+}
+
+/* Enhanced Shell */
+calcite-shell-panel {
+  --calcite-color-foreground-1: var(--geovez-surface);
+  --calcite-color-border-3: var(--geovez-border);
+}
+
+/* Modern List Items */
+calcite-list-item {
+  --calcite-color-foreground-1: var(--geovez-surface);
+  --calcite-color-foreground-2: var(--geovez-background);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+calcite-list-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--geovez-shadow);
+}
+
+/* Improved Buttons */
+calcite-button[kind="brand"] {
+  --calcite-color-brand: var(--geovez-primary);
+  --calcite-color-brand-hover: var(--geovez-primary-dark);
+  --calcite-color-brand-press: var(--geovez-primary-dark);
+}
+
+/* Modal Enhancements */
+calcite-modal {
+  --calcite-color-foreground-1: var(--geovez-surface);
+  --calcite-color-border-3: var(--geovez-border);
+}
+
+/* Loader Styling */
+calcite-loader {
+  --calcite-color-brand: var(--geovez-primary);
+}
+
+/* Icon Enhancements */
+calcite-icon {
+  transition: all 0.3s ease;
+}
+
+/* Action Button Hover Effects */
+calcite-action:hover calcite-icon {
+  transform: scale(1.1);
+}
+
+/* Panel Content Spacing */
+.panel-content > * + * {
+  margin-top: 1rem;
+}
+
+/* Responsive Panel Headers */
+@media (max-width: 768px) {
+  .panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .panel-title {
+    font-size: 1.2rem;
+  }
+}
+
+/* Animation Classes */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive Design - Mobile First */
+@media (max-width: 1024px) {
+  .header-actions {
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+  }
+  
+  .user-info {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .modern-sidenav {
+    width: 240px;
+  }
+  
+  .nav-item {
+    padding: 0.75rem 1rem;
+    margin: 0.25rem 0 0.25rem 0.5rem;
+  }
+  
+  .footer-links {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .footer-social {
+    gap: 0.75rem;
+  }
+  
+  .social-link {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .panel-content {
+    padding: 1.5rem;
+  }
+  
+  .panel-title {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-actions {
+    gap: 0.25rem;
+  }
+  
+  .user-info {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
+  
+  .sign-in-button {
+    padding: 0.6rem 1rem !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .modern-sidenav {
+    width: 200px;
+  }
+  
+  .nav-item {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .panel-content {
+    padding: 1rem;
+  }
+  
+  .auth-modal-content {
+    padding: 1.5rem;
+  }
+}
+
+/* Modern Button Styles */
+.modern-button {
+  background: linear-gradient(135deg, var(--geovez-primary), var(--geovez-primary-dark)) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 1.5rem !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+  box-shadow: var(--geovez-shadow) !important;
+}
+
+.modern-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--geovez-shadow-elevated) !important;
+}
+
+.modern-button.secondary {
+  background: var(--geovez-surface) !important;
+  color: var(--geovez-primary) !important;
+  border: 2px solid var(--geovez-primary) !important;
+}
+
+.modern-button.secondary:hover {
+  background: var(--geovez-primary) !important;
+  color: white !important;
+}
+
+/* Card Styles for Panels */
+.modern-card {
+  background: var(--geovez-surface);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--geovez-shadow);
+  border: 1px solid var(--geovez-border);
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.modern-card:hover {
+  box-shadow: var(--geovez-shadow-elevated);
+  transform: translateY(-2px);
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--geovez-text);
+  margin-bottom: 0.75rem;
+}
+
+.card-content {
+  color: var(--geovez-text-secondary);
+  line-height: 1.6;
+}
+  
+  .header-actions {
+    gap: 0.5rem;
+  }
+  
+  .user-info {
+    display: none;
+  }
+}
+
+/* Tour styles */
+.react-joyride__tooltip {
+  border-radius: 8px;
+}
+
+/* Custom Calcite overrides */
+calcite-shell-panel[collapsed] {
+  --calcite-shell-panel-width: 50px;
+}
+
+calcite-navigation[slot="header"] {
+  background: var(--calcite-color-brand);
+  color: white;
+}
+
+calcite-navigation calcite-navigation-logo {
+  color: white;
+}

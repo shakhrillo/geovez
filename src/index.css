@@ -1,0 +1,111 @@
+/* Base styles for GeoVez App - Modern Design */
+:root {
+  font-family: "Avenir Next", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+  
+  color-scheme: light;
+  color: #2B2D42;
+  background-color: #F5F7FA;
+
+  /* Modern CSS variables for consistent theming */
+  --geovez-primary: #0079C1;
+  --geovez-primary-dark: #005CE6;
+  --geovez-accent: #00B6F0;
+  --geovez-surface: #FFFFFF;
+  --geovez-background: #F5F7FA;
+  --geovez-text: #2B2D42;
+  --geovez-text-secondary: #6C757D;
+  --geovez-border: #E9ECEF;
+  --geovez-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --geovez-shadow-elevated: 0 4px 20px rgba(0, 0, 0, 0.15);
+  --geovez-border-radius: 8px;
+  --geovez-border-radius-large: 16px;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--geovez-background);
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Enhanced Calcite components integration */
+calcite-shell {
+  height: 100vh !important;
+  --calcite-color-brand: var(--geovez-primary) !important;
+  --calcite-color-brand-hover: var(--geovez-primary-dark) !important;
+}
+
+calcite-navigation {
+  --calcite-color-background: var(--geovez-surface) !important;
+  box-shadow: var(--geovez-shadow) !important;
+}
+
+calcite-panel {
+  --calcite-color-background: var(--geovez-surface) !important;
+  border-radius: var(--geovez-border-radius) !important;
+}
+
+calcite-button[kind="brand"] {
+  --calcite-color-brand: var(--geovez-primary) !important;
+  --calcite-color-brand-hover: var(--geovez-primary-dark) !important;
+}
+
+/* ArcGIS Map view styling */
+.esri-view {
+  outline: none;
+}
+
+.esri-view .esri-view-surface--inset-outline:focus::after {
+  outline: none !important;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--calcite-color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--calcite-color-border-2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--calcite-color-border-1);
+}
+
+/* Custom utility classes */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

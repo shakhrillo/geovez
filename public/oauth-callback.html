@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OAuth Callback</title>
+  <meta charset="utf-8">
+</head>
+<body>
+  <script>
+    // This page handles the OAuth callback for ArcGIS Online authentication
+    // It automatically closes the popup and returns control to the parent window
+    
+    // Extract OAuth parameters from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const error = urlParams.get('error');
+    
+    if (error) {
+      console.error('OAuth error:', error);
+      // Communicate error back to parent window
+      if (window.opener) {
+        window.opener.postMessage({ error: error }, '*');
+      }
+    } else if (code) {
+      console.log('OAuth success, code received');
+      // Communicate success back to parent window
+      if (window.opener) {
+        window.opener.postMessage({ code: code }, '*');
+      }
+    }
+    
+    // Close the popup window
+    if (window.opener) {
+      window.close();
+    } else {
+      // If not in a popup, redirect to main app
+      window.location.href = '/';
+    }
+  </script>
+</body>
+</html>
